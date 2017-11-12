@@ -82,6 +82,12 @@ $.ajax({
   /////////////////////////////////////////////// END RANDOM SHUFFLE
 
   // Display Question and Choices on Click
+
+  // var gamePlay = function() {
+  //     // Some code
+  // };
+
+
   $(".gameButton").click(function() {
     $("#gameGrid").hide();
     var questionDiv = $("<div>");
@@ -137,7 +143,6 @@ $(document).on("click", "li.answers", function() {
     $("#choices-div").empty();
     $("#question").empty();
     $("#gameGrid").show();
-
 
 
     //assign to var
