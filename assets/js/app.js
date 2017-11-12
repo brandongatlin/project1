@@ -1,22 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Marketplace
-Explore
-@brandongatlin
-Sign out
-Watch 0
-Star 0 Fork 4 brandongatlin / team - project - 1
-forked from fernandofuentes / team - project - 1
-Code Pull requests 0 Projects 0 Wiki Insights Settings
-Tree: 3 d79cc1df2 Find file Copy pathteam - project - 1 / assets / js / app.js
-3 d79cc1 8 hours ago
-@brandongatlin brandongatlin cleaned up firefight
-4 contributors @fernandofuentes @Sylvrleef @brandongatlin @batlijo
-RawBlameHistory
-112 lines(84 sloc) 3.13 KB
 // This hides The Game until the Start Button is Clicked On
 $(".gameRow").hide();
 
@@ -27,7 +8,17 @@ $("#startBtn").on("click", function() {
 });
 
 var numberOfQuestions = 30;
-var currentScore = "";
+
+var results = "";
+var question = "";
+var correctAnswer = "";
+var incorrectAnswer1 = "";
+var incorrectAnswer2 = "";
+var incorrectAnswer3 = "";
+
+var playerScore = 0;
+var pointValue = "";
+
 
 // The Function that renders the Question with Answer Choices
 var question = $(this).attr("data-name");
@@ -39,26 +30,26 @@ $.ajax({
   method: "GET"
 }).done(function(response) {
 
-  var results = response.results;
+  results = response.results;
   // console.log(results);
 
   // Storing the question data
-  var question = response.results["0"].question;
+  question = response.results["0"].question;
   // console.log(question);
 
-  var correctAnswer = response.results["0"].correct_answer;
+  correctAnswer = response.results["0"].correct_answer;
   // console.log(correctAnswer)
 
-  var incorrectAnswer1 = response.results["0"].incorrect_answers["0"];
+  incorrectAnswer1 = response.results["0"].incorrect_answers["0"];
   // console.log(incorrectAnswer1)
 
-  var incorrectAnswer2 = response.results["0"].incorrect_answers["1"];
+  incorrectAnswer2 = response.results["0"].incorrect_answers["1"];
   // console.log(incorrectAnswer2)
 
-  var incorrectAnswer3 = response.results["0"].incorrect_answers["2"];
+  incorrectAnswer3 = response.results["0"].incorrect_answers["2"];
   // console.log(incorrectAnswer3)
 
-  // var choicesOrder = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3]
+  var choicesOrder = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3];
   // console.log(choicesOrder)
 
   /////////////////////////////////////////////// RANDOM SHUFFLE
@@ -86,14 +77,13 @@ $.ajax({
   // Used like so
   var choices = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3];
   arr = shuffle(choices);
-  // console.log(choices);
+  //console.log(arr);
 
   /////////////////////////////////////////////// END RANDOM SHUFFLE
 
   // Display Question and Choices on Click
   $(".gameButton").click(function() {
-    $(this).hide();
-    $(".gameRow").hide();
+    $("#chat-and-game").hide();
     var questionDiv = $("<div>");
     questionDiv.addClass("question");
     questionDiv.html(response.results["0"].question);
@@ -114,6 +104,8 @@ $.ajax({
 
         // Set its contents:
         item.appendChild(document.createTextNode(array[i]));
+        $(item).addClass("answers");
+        $(item).val($(item).val() + '100');
 
         // Add it to the list:
         list.appendChild(item);
@@ -124,7 +116,38 @@ $.ajax({
     }
 
     // Display the choices
-    document.getElementById("choices-div").appendChild(makeUL(options[0]));
+    document.getElementById("choices-div").appendChild(makeUL(arr));
     $(".gameButton").prop("onclick", null).off("click");
   });
 });
+
+$(document).on("click", "li.answers", function() {
+
+  var usersGuess = $(this).text();
+  var correctAnswer = results["0"].correct_answer;
+
+  if (usersGuess == correctAnswer) {
+    alert("correct!");
+
+    //get point value from Button (this dont work)
+    pointValue = $(this).val();
+    console.log(pointValue);
+    playerScore = playerScore + pointValue;
+    $("#choices-div").empty();
+    $("#question").empty();
+
+
+
+    //assign to var
+    $("#playerScore").html(playerScore);
+  } else {
+    alert("incorrect!");
+    playerScore = playerScore - pointValue;
+    $("#choices-div").empty();
+    $("#question").empty();
+
+
+  }
+});
+
+// scoring logic
