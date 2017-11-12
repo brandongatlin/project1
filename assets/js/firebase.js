@@ -1,4 +1,4 @@
-console.log("firebase.js loaded b");
+console.log("firebase.js loaded");
 
 // Initialize Firebase
 var config = {
@@ -15,20 +15,13 @@ var database = firebase.database();
 
 //begin database js File
 var loginData = database.ref("/login");
-var playersRef = database.ref("players");
 var scoreData = database.ref("/scores");
-var currentPlayers = null;
-var currentTurn = null;
-var playerNum = false;
-var playerOneExists = false;
-var playerTwoExists = false;
-var playerOneData = null;
-var playerTwoData = null;
 
 //auth js File
 
 var provider = new firebase.auth.FacebookAuthProvider();
 var displayName = "";
+var highestScore = "";
 
 firebase.auth().getRedirectResult().then(function(result) {
   if (result.credential) {
@@ -38,6 +31,9 @@ firebase.auth().getRedirectResult().then(function(result) {
     console.log(token);
     displayName = result.user.displayName;
     $("#player1").html(displayName);
+
+    highestScore = result.scores.high_score;
+    $("#highestScore").html(highestScore);
 
     console.log(displayName);
     console.log("connected to Facebook");
