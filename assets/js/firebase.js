@@ -16,7 +16,7 @@ var database = firebase.database();
 //begin database js File
 var loginData = database.ref("/login");
 var playersRef = database.ref("players");
-var currentTurnRef = database.ref("turn");
+var scoreData = database.ref("/scores");
 var currentPlayers = null;
 var currentTurn = null;
 var playerNum = false;
@@ -88,6 +88,19 @@ $("#facebookBtn").on("click", function() {
 
 $("#logOffFacebook").on("click", function() {
   firebase.auth().signOut().then(function() {
+
+    var scoreObj = {
+      name: displayName,
+      high_score: playerScore,
+      time: firebase.database.ServerValue.TIMESTAMP
+
+    };
+
+    console.log(scoreObj);
+
+    scoreData.push(scoreObj);
+
+
     $("#player1").html("Player Name");
     $("#facebookBtn").show();
     $("#logOffFacebook").hide();
