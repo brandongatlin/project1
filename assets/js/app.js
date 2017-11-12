@@ -17,7 +17,45 @@ var incorrectAnswer2 = "";
 var incorrectAnswer3 = "";
 
 var playerScore = 0;
+
 var pointValue = "";
+
+
+
+$('.one').on("click", function() {
+  pointValue = 100;
+});
+
+$('.two').on("click", function() {
+  pointValue = 200;
+});
+
+
+
+// if ($("this").hasClass("one")) {
+//   pointValue = 100;
+// }
+//
+// if ($(":button").hasClass('two')) {
+//   pointValue = 200;
+// }
+//
+// if ($(":button").hasClass('three')) {
+//   pointValue = 300;
+// }
+//
+// if ($(":button").hasClass('four')) {
+//   pointValue = 400;
+// }
+//
+// if ($(":button").hasClass('five')) {
+//   pointValue = 500;
+// }
+//
+// if ($(":button").hasClass('six')) {
+//   pointValue = 600;
+// }
+
 
 
 // The Function that renders the Question with Answer Choices
@@ -112,7 +150,7 @@ $.ajax({
         // Set its contents:
         item.appendChild(document.createTextNode(array[i]));
         $(item).addClass("answers");
-        $(item).val($(item).val() + '100');
+        $(item).val($(item).val() + pointValue);
 
         // Add it to the list:
         list.appendChild(item);
@@ -137,8 +175,8 @@ $(document).on("click", "li.answers", function() {
     alert("correct!");
 
     //get point value from Button (this dont work)
-    pointValue = $(this).val();
-    console.log(pointValue);
+    //pointValue = $(this).val();
+    console.log("point value: " + pointValue);
     playerScore = playerScore + pointValue;
     $("#choices-div").empty();
     $("#question").empty();
@@ -149,6 +187,7 @@ $(document).on("click", "li.answers", function() {
     $("#playerScore").html(playerScore);
   } else {
     alert("incorrect!");
+    console.log("point value: " + pointValue);
     playerScore = playerScore - pointValue;
     $("#choices-div").empty();
     $("#question").empty();
