@@ -1,9 +1,9 @@
 // This hides The Game until the Start Button is Clicked On
-$(".gameRow").hide();
+$("#gameGrid").hide();
 
 // Clicking the Start Button will Start the Game
 $("#startBtn").on("click", function() {
-  $(".gameRow").show();
+  $("#gameGrid").show();
   $("#startBtn").hide();
 });
 
@@ -83,11 +83,12 @@ $.ajax({
 
   // Display Question and Choices on Click
   $(".gameButton").click(function() {
-    $("#chat-and-game").hide();
+    $("#gameGrid").hide();
     var questionDiv = $("<div>");
     questionDiv.addClass("question");
     questionDiv.html(response.results["0"].question);
     $(".question").html(question);
+
 
     // Display Answers
     var options = [
@@ -135,6 +136,7 @@ $(document).on("click", "li.answers", function() {
     playerScore = playerScore + pointValue;
     $("#choices-div").empty();
     $("#question").empty();
+    $("#gameGrid").show();
 
 
 
@@ -145,6 +147,7 @@ $(document).on("click", "li.answers", function() {
     playerScore = playerScore - pointValue;
     $("#choices-div").empty();
     $("#question").empty();
+    $("#gameGrid").show();
 
 
   }
