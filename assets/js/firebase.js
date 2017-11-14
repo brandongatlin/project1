@@ -118,4 +118,4 @@ $("#logOffFacebook").on("click", function() {
 
 
 var ref = database.ref("scores");
-console.log(ref.val());
+console.log(data.val());
