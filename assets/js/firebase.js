@@ -1,4 +1,4 @@
-console.log("firebase.js loaded");
+console.log("firebase.js loaded - questions fixed");
 
 // Initialize Firebase
 var config = {
@@ -32,22 +32,16 @@ firebase.auth().getRedirectResult().then(function(result) {
     displayName = result.user.displayName;
     $("#player1").html(displayName);
 
+    //order result by value to get highest score
+
+
+
     highestScore = result.scores.high_score;
     $("#highestScore").html(highestScore);
 
     console.log(displayName);
+    console.log(highestScore);
     console.log("connected to Facebook");
-
-
-    var loginObj = {
-      name: displayName,
-      time: firebase.database.ServerValue.TIMESTAMP
-
-    };
-
-    console.log(loginObj);
-
-    loginData.push(loginObj);
 
   }
   // The signed-in user info.
@@ -80,6 +74,15 @@ $("#facebookBtn").on("click", function() {
   $("#facebookBtn").hide();
   $("#logOffFacebook").show();
 
+  var loginObj = {
+    name: displayName,
+    time: firebase.database.ServerValue.TIMESTAMP
+
+  };
+
+  console.log(loginObj);
+
+  loginData.push(loginObj);
 });
 
 $("#logOffFacebook").on("click", function() {
@@ -96,6 +99,8 @@ $("#logOffFacebook").on("click", function() {
 
     scoreData.push(scoreObj);
 
+    //reset score to 0 after being pushed to firebase
+    reset();
 
     $("#player1").html("Player Name");
     $("#facebookBtn").show();

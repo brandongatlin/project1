@@ -1,3 +1,7 @@
+function reset() {
+  playerScore = 0;
+}
+
 // This hides The Game until the Start Button is Clicked On
 $("#gameGrid").hide();
 
@@ -20,113 +24,41 @@ var playerScore = 0;
 
 var pointValue = "";
 
+// Wraped my ajax call code in a function
+function getQuestion() {
 
+  // The Function that renders the Question with Answer Choices
+  var question = $(this).attr("data-name");
+  var queryURL = "https://opentdb.com/api.php?amount=1&difficulty=easy&type=multiple";
 
-$('.one').on("click", function() {
-  pointValue = 100;
-});
+  // Creating an AJAX call for the specific game baord button being clicked
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  }).done(function(response) {
 
-$('.two').on("click", function() {
-  pointValue = 200;
-});
+    results = response.results;
+    // console.log(results);
 
+    // Storing the question data
+    question = response.results["0"].question;
+    // console.log(question);
 
+    correctAnswer = response.results["0"].correct_answer;
+    // console.log(correctAnswer)
 
-// if ($("this").hasClass("one")) {
-//   pointValue = 100;
-// }
-//
-// if ($(":button").hasClass('two')) {
-//   pointValue = 200;
-// }
-//
-// if ($(":button").hasClass('three')) {
-//   pointValue = 300;
-// }
-//
-// if ($(":button").hasClass('four')) {
-//   pointValue = 400;
-// }
-//
-// if ($(":button").hasClass('five')) {
-//   pointValue = 500;
-// }
-//
-// if ($(":button").hasClass('six')) {
-//   pointValue = 600;
-// }
+    incorrectAnswer1 = response.results["0"].incorrect_answers["0"];
+    // console.log(incorrectAnswer1)
 
+    incorrectAnswer2 = response.results["0"].incorrect_answers["1"];
+    // console.log(incorrectAnswer2)
 
+    incorrectAnswer3 = response.results["0"].incorrect_answers["2"];
+    // console.log(incorrectAnswer3)
 
-// The Function that renders the Question with Answer Choices
-var question = $(this).attr("data-name");
-var queryURL = "https://opentdb.com/api.php?amount=1&difficulty=easy&type=multiple";
+    var choicesOrder = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3];
+    // console.log(choicesOrder)
 
-// Creating an AJAX call for the specific movie button being clicked
-$.ajax({
-  url: queryURL,
-  method: "GET"
-}).done(function(response) {
-
-  results = response.results;
-  // console.log(results);
-
-  // Storing the question data
-  question = response.results["0"].question;
-  // console.log(question);
-
-  correctAnswer = response.results["0"].correct_answer;
-  // console.log(correctAnswer)
-
-  incorrectAnswer1 = response.results["0"].incorrect_answers["0"];
-  // console.log(incorrectAnswer1)
-
-  incorrectAnswer2 = response.results["0"].incorrect_answers["1"];
-  // console.log(incorrectAnswer2)
-
-  incorrectAnswer3 = response.results["0"].incorrect_answers["2"];
-  // console.log(incorrectAnswer3)
-
-  var choicesOrder = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3];
-  // console.log(choicesOrder)
-
-  /////////////////////////////////////////////// RANDOM SHUFFLE
-
-  function shuffle(array) {
-    var currentIndex = array.length,
-      temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-  }
-
-  // Used like so
-  var choices = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3];
-  arr = shuffle(choices);
-  //console.log(arr);
-
-  /////////////////////////////////////////////// END RANDOM SHUFFLE
-
-  // Display Question and Choices on Click
-
-  // var gamePlay = function() {
-  //     // Some code
-  // };
-
-
-  $(".gameButton").click(function() {
     $("#gameGrid").hide();
     var questionDiv = $("<div>");
     questionDiv.addClass("question");
@@ -134,67 +66,114 @@ $.ajax({
     $(".question").html(question);
 
 
-    // Display Answers
-    var options = [
-      choices = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3]
-    ];
 
-    function makeUL(array) {
-      // Create the list element:
-      var list = document.createElement("ul");
+    var choices = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3];
+    var arr = shuffle(choices);
+    //console.log(arr);
 
-      for (var i = 0; i < array.length; i++) {
-        // Create the list item:
-        var item = document.createElement("li");
-
-        // Set its contents:
-        item.appendChild(document.createTextNode(array[i]));
-        $(item).addClass("answers");
-        $(item).val($(item).val() + pointValue);
-
-        // Add it to the list:
-        list.appendChild(item);
-      }
-
-      // Finally, return the constructed list:
-      return list;
-    }
 
     // Display the choices
     document.getElementById("choices-div").appendChild(makeUL(arr));
-    $(".gameButton").prop("onclick", null).off("click");
-  });
-});
+
+
+  }); //END ajax .done
+
+} //END getQuestion
+
+
 
 $(document).on("click", "li.answers", function() {
-
   var usersGuess = $(this).text();
   var correctAnswer = results["0"].correct_answer;
 
-  if (usersGuess == correctAnswer) {
+  if (usersGuess === correctAnswer) {
     alert("correct!");
 
-    //get point value from Button (this dont work)
-    //pointValue = $(this).val();
     console.log("point value: " + pointValue);
     playerScore = playerScore + pointValue;
     $("#choices-div").empty();
     $("#question").empty();
     $("#gameGrid").show();
-
-
-    //assign to var
     $("#playerScore").html(playerScore);
   } else {
-    alert("incorrect!");
-    console.log("point value: " + pointValue);
+    alert("wrong!");
+
+    console.log("point value: " - pointValue);
     playerScore = playerScore - pointValue;
     $("#choices-div").empty();
     $("#question").empty();
     $("#gameGrid").show();
-
-
+    $("#playerScore").html(playerScore);
   }
 });
 
-// scoring logic
+
+function shuffle(array) {
+  var currentIndex = array.length,
+    temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+
+$(".gameButton").click(function() {
+
+  // **** THIS MERGED FROM OTHER .click *********
+  $(this).prop('disabled', true);
+  $(this).css("background-color", "#0069D9");
+  $(this).css("border-color", "white");
+  $(this).text("");
+  // *******************************************
+
+  // this allows me to make an ajax call to my api to get a new question
+  // every time I click a .gameButton
+  getQuestion();
+
+
+  // In the on click of the .gameButton we get the point value using its data-points
+  // attribute. data-points will be a string so I parse it into an integer.
+  pointValue = parseInt($(this).attr("data-points"));
+
+  // I can verify my points value and make sure its of type number (integer).
+  console.log("pointValue:", pointValue, "typeof:", typeof pointValue);
+
+  // Display Answers
+  var options = [
+    choices = [correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3]
+  ];
+
+}); //END $("gameButton").click
+
+
+function makeUL(array) {
+  // Create the list element:
+  var list = document.createElement("ul");
+
+  for (var i = 0; i < array.length; i++) {
+    // Create the list item:
+    var item = document.createElement("li");
+
+    // Set its contents:
+    item.appendChild(document.createTextNode(array[i]));
+    $(item).addClass("answers");
+    $(item).val($(item).val() + pointValue);
+
+    // Add it to the list:
+    list.appendChild(item);
+  }
+
+  // Finally, return the constructed list:
+  return list;
+}
