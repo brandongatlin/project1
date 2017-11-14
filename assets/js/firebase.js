@@ -117,5 +117,5 @@ $("#logOffFacebook").on("click", function() {
 });
 
 
-var ref = database.ref(scores);
+var ref = database.ref("scores");
 console.log(ref);
