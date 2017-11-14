@@ -61,6 +61,7 @@ firebase.auth().getRedirectResult().then(function(result) {
   // ...
 });
 
+//begin auth function
 firebase.auth().signOut().then(function() {
   // Sign-out successful.
 }).catch(function(error) {
@@ -114,3 +115,7 @@ $("#logOffFacebook").on("click", function() {
   });
 
 });
+
+
+var ref = database.ref(scores);
+console.log(ref);
