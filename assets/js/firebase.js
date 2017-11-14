@@ -33,6 +33,8 @@ firebase.auth().getRedirectResult().then(function(result) {
     $("#player1").html(displayName);
 
     //order result by value to get highest score
+    var ref = database.ref("scores");
+    console.log(result.val());
 
 
 
@@ -115,7 +117,3 @@ $("#logOffFacebook").on("click", function() {
   });
 
 });
-
-
-var ref = database.ref("scores");
-console.log(result.val());
